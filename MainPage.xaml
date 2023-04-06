@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:BreakfastApp.ViewModels"
+             xmlns:models="clr-namespace:BreakfastApp.Models" xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="viewmodels:BreakfastViewModel"
+             x:Class="BreakfastApp.MainPage"
+             Shell.BackgroundColor="Black"
+           >
+
+    <ContentPage.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="Black" />
+    </ContentPage.Behaviors>
+
+
+    <Grid Padding="16" BackgroundColor="DarkGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!--Your Breakfasts -->
+        <HorizontalStackLayout Spacing="3" >
+            <Label FontSize="24" Text="Your" FontAttributes="Bold" FontFamily=""/>
+            <Label Text="Breakfasts" FontSize="24" TextColor="#93ea76" FontAttributes="Bold"/>
+        </HorizontalStackLayout>
+        
+        <!--Breakfasts created -->
+        <Label Text="Breakfast you have created"
+               Grid.Row="1"
+               TextColor="#8876ea"/>
+        <!--scrollable breakfast lists -->
+        <RefreshView Grid.Row="2" Margin="0,16"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding LoadBreakfastsAsyncCommand}">
+        <CollectionView ItemsSource="{Binding Breakfasts}" >
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="20"/>                
+            </CollectionView.ItemsLayout>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Breakfast">
+                    <Border MinimumHeightRequest="315" Stroke="#effef">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="40,0,0,40" />
+                            </Border.StrokeShape>
+                            <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition  Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Image Source="{Binding Image}"
+                                   Aspect="AspectFill"/>
+                            
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <!--Name-->
+                                <Label Text="{Binding Name}"
+                                       FontSize="24"
+                                       FontAttributes="Bold"
+                                       Margin="6,0"
+                                       HorizontalTextAlignment="Center"/>
+                                    <HorizontalStackLayout 
+                                            Grid.Row="1" Margin="6,0"                                           
+                                            HorizontalOptions="Center">
+                                        <!--Start & End time-->
+                                        <Label Text="{Binding StartDateTime, Converter={StaticResource DateTimeToBreakfastDayConverter}}" TextColor="#8876ea"/>
+                                        <Label Text=", "/>
+                                        <Label Text="{Binding StartDateTime, Converter={StaticResource DateTimeToTimeConverter}}" TextColor="#8876ea"/>
+                                        <Label Text=" - "/>
+                                        <!--<Label Text="{Binding EndDateTime, Converter={StaticResource DateTimeToBreakfastDayConverter}}"/>-->
+
+                                        <Label Text="{Binding EndDateTime, Converter={StaticResource DateTimeToTimeConverter}}" TextColor="#8876ea"/>
+                                    </HorizontalStackLayout>
+                                    <!--Description-->
+                                    <Label Text="{Binding Description}" Grid.Row="2" Padding="3" Margin="6,0" TextColor="DarkGray" HorizontalTextAlignment="Center"/>
+                                <!--Savory-->
+                                
+                                <StackLayout BindableLayout.ItemsSource="{Binding Savory}"
+                                    Grid.Row="3" Grid.Column="2"
+                                    >
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Frame Padding="6" Margin="20,3,20,3" BorderColor="Transparent"
+                                                   BackgroundColor="#f9e9d6" 
+                                                   >
+                                                <Label Text="{Binding .}"  HorizontalOptions="Center"/>                                               
+                                            </Frame>                                           
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+
+                                <!--Sweet-->
+                                <StackLayout 
+                                    BindableLayout.ItemsSource="{Binding Sweet}" Margin="0,0,0,9"
+                                    Grid.Row="4"
+                                    >
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                                <Frame Padding="6"  Margin="20,3,20,3" BorderColor="Transparent" BackgroundColor="#eab676">
+                                                <Label Text="{Binding .}" HorizontalOptions="Center"/>
+                                            </Frame>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </Grid>
+                        </Grid>                           
+                        </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>            
+        </CollectionView>
+        </RefreshView>
+        <!--create new breakfast -->
+            <Button Text="Create New Breakfast"
+                    BackgroundColor="Black"
+                    Padding="16"
+                    CornerRadius="0"                    
+                    Grid.Row="3"/>
+    </Grid>
+
+
+</ContentPage>
